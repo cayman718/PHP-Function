@@ -73,21 +73,24 @@ function all($table){
 // @return array
 
 function find($table,$id){
-    global $pdo;
+    $sql="select * from $table where";
+    $pdo=$pdo=pdo('crud');
     if(is_array($id)){
         $tmp=[]; //清空
         foreach($id as $key => $value){
             // string print f("`%s`='%s',$key,$value");
             $tmp[]="`$key`='$value'";
         }
-        $sql="select * from $table where".join("&&",$tmp);
+         $sql=$sql.join(" && ",$tmp);
+        
     }else{
-       $pdo=pdo('crud');
-       $sql="select * from $table where id='$id'";
+        $sql=$sql . " `id`='$id'";
     }
-    $row=$pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);//query是查詢
+    $row=$pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
+    
     return $row;
 }
+
 
 
 
@@ -99,23 +102,72 @@ function find($table,$id){
 // @return boolean
 
 function del($table,$id){
-    $pdo=pdo('crud');
+    $sql="delete from $table where";
+    $pdo=$pdo=pdo('crud');
     if(is_array($id)){
         $tmp=[]; //清空
         foreach($id as $key => $value){
             // string print f("`%s`='%s',$key,$value");
             $tmp[]="`$key`='$value'";
         }
-        $sql="delete from $table where".join("&&",$tmp);
+        $sql=$sql.join("&&",$tmp);
     }else{
-       $pdo=pdo('crud');
-       $sql="delete from $table where id='$id'";
+       $sql=$sql." id='$id'";
     }
     return $pdo->exec($sql); 
 
     
 }
 
+//更新指定條件的資料
+//@param string $table 資料表名稱
+// @param array $array 更新的欄位及內容
+// @return array || number $id 條件(數字或陣列)
+// @return boolean
+
+
+
+function update($table,$array,$id){
+    $sql="update $table set";
+    $pdo=$pdo=pdo('crud');
+    $tmp=[];
+    foreach($array as $key => $value){
+        $tmp[]="`$key`='$value'";
+    }
+    $sql=$sql . join(",",$tmp);
+
+    if(is_array($id)){
+        $tmp=[];
+        foreach($id as $key => $value){
+            $tmp[]="`$key`='$value'";
+        }
+        $sql=$sql . " where ".join(" && ",$tmp);
+
+    }else{
+        $sql=$sql . " where `id`='$id'";
+    }
+         return $pdo->exec($sql);
+
+
+
+}
+
+
+//新增資料
+//@param string $table 資料表名稱
+// @param string $cols 新增的欄位字串
+// @return string $values 新增的值字串
+// @return boolean
+
+
+function insert($table,$array){
+    $pdo=pdo('crud');
+    $sql="insert into $table ";
+    $keys=array_keys($array);
+    
+    $sql=$sql . "(`".join("`,`",$keys)."`) values ('".join("','",$array)."')";
+    return $pdo->exec($sql);
+} 
 
 
 
@@ -126,6 +178,9 @@ function dd($array){
     echo "<pre>";
     print_r($array);
     echo "</pre>";
-
 }
+
+
+
+
 ?>

@@ -5,8 +5,7 @@ if(!isset($_GET['id']) || !is_numeric($_GET['id'])){
     exit();
 }
 include "./function.php";
-$dsn="mysql:host=localhost;charset=utf8;dbname=crud";
-$pdo=new PDO($dsn,'root','');
+
 
 $id=$_GET['id'];
 del("member",$id);

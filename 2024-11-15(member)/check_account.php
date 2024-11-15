@@ -1,6 +1,6 @@
 <?php
-$dsn="mysql:host=localhost;charset=utf8;dbname=crud";
-$pdo=new PDO($dsn,'root','');
+include "./function.php";
+
 
 
 if(!isset($_POST['acc'])){
@@ -14,10 +14,10 @@ $pw=$_POST['pw'];
 
 
 //$sql="select * from `member` where `acc`='$acc' && `pw`=$pw ";
-$sql="select count(id) from `member` where `acc`='$acc' && `pw`='$pw'";
+//$sql="select count(id) from `member` where `acc`='$acc' && `pw`='$pw'";
 //echo $sql;
-$row=$pdo->query($sql)->fetchColumn();
-
+$row=find('member',['acc'=>$acc,'pw'=>$pw]);
+dd($row);
 
 
 
