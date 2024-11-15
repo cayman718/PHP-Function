@@ -38,6 +38,11 @@
                 已有帳號？<a href="login.php">登入</a>
             </p>
         </form>
+        <?php
+     include "./function.php";
+    //  stars("正三角形",6);
+     stars("倒正三角形",5);
+     ?>
     </div>
 
 
